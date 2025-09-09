@@ -1,0 +1,29 @@
+name: Update Pi-hole Blocklist
+
+on:
+  schedule:
+    - cron: '0 0 * * *'   # Daily at midnight UTC
+  workflow_dispatch:      # Manual trigger
+
+jobs:
+  update-blocklist:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run sanitizer
+        run: |
+          chmod +x sanitize_and_commit.sh
+          ./sanitize_and_commit.sh
+
+      - name: Commit and push results
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add blocklist_*.txt
+          git commit -m "Update blocklist $(date -u +'%Y-%m-%d')" || echo "No changes to commit"
+          git push
