@@ -17,13 +17,11 @@ NC='\033[0m' # No Color
 workspace="${GITHUB_WORKSPACE:-$(pwd)}"
 input_file="$workspace/blocklists.txt"
 date_str=$(date -u +'%Y-%m-%d')
-output_versioned="$workspace/blocklist_${date_str}.txt"
 output_static="$workspace/blocklist.txt"
 
 echo -e "${BLUE}Starting Pi-hole blocklist update at $(date -u)${NC}"
 echo -e "${BLUE}Reading blocklist URLs from ${input_file}${NC}"
 echo -e "${BLUE}Output will be saved to:${NC}"
-echo -e "${BLUE} - ${output_versioned}${NC}"
 echo -e "${BLUE} - ${output_static}${NC}"
 
 if [[ ! -f "$input_file" ]]; then
@@ -74,8 +72,7 @@ done < "$input_file"
 # 🧹 Sort & Save
 # ────────────────────────────────────────────────────────────────
 echo -e "${BLUE}Sorting and deduplicating domains...${NC}"
-sort -u "$temp_domains" > "$output_versioned"
-cp "$output_versioned" "$output_static"
+sort -u "$temp_domains" > "$output_static"
 
 count=$(wc -l < "$output_static")
 echo -e "${GREEN}Blocklist update complete: $count domains written.${NC}"
@@ -89,14 +86,8 @@ if [[ -n "$GITHUB_ACTIONS" ]]; then
   git config --global user.email "bot@example.com"
   git config --global user.name "Blocklist Bot"
 
-  #git add "$output_static" "$output_versioned"
   git add "$output_static"
-
-  #if git diff --cached --quiet; then
-  #  echo -e "${YELLOW}No changes to commit.${NC}"
-  #else
-    git commit -m "Update blocklist on $date_str"
-    git push
-    echo -e "${GREEN}Blocklists committed and pushed.${NC}"
-  #fi
+  git commit -m "Update blocklist on $date_str"
+  git push
+  echo -e "${GREEN}Blocklists committed and pushed.${NC}"
 fi
