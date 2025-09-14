@@ -88,6 +88,6 @@ if [[ -n "$GITHUB_ACTIONS" ]]; then
 
   git add "$output_static"
   git commit -m "Update blocklist on $date_str"
-  git push
+  git push --force
   echo -e "${GREEN}Blocklists committed and pushed.${NC}"
 fi
