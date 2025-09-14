@@ -89,7 +89,8 @@ if [[ -n "$GITHUB_ACTIONS" ]]; then
   git config --global user.email "bot@example.com"
   git config --global user.name "Blocklist Bot"
 
-  git add "$output_static" "$output_versioned"
+  #git add "$output_static" "$output_versioned"
+  git add "$output_static"
 
   if git diff --cached --quiet; then
     echo -e "${YELLOW}No changes to commit.${NC}"
