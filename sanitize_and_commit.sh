@@ -92,11 +92,11 @@ if [[ -n "$GITHUB_ACTIONS" ]]; then
   #git add "$output_static" "$output_versioned"
   git add "$output_static"
 
-  if git diff --cached --quiet; then
-    echo -e "${YELLOW}No changes to commit.${NC}"
-  else
+  #if git diff --cached --quiet; then
+  #  echo -e "${YELLOW}No changes to commit.${NC}"
+  #else
     git commit -m "Update blocklist on $date_str"
     git push
     echo -e "${GREEN}Blocklists committed and pushed.${NC}"
-  fi
+  #fi
 fi
